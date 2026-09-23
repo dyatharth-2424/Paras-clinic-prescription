@@ -187,4 +187,1045 @@ table input,table select{width:100%;padding:6px;border:0}
  }
 
  .print-advice-line{
-  margin:4px 0 4px 28
+  margin:4px 0 4px 28px;
+  white-space:pre-wrap
+ }
+
+ .print-footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  margin-top:35px;
+  page-break-inside:avoid
+ }
+
+ .print-follow{
+  font-weight:bold;
+  font-size:13px
+ }
+
+ .print-doctor{
+  text-align:right;
+  min-width:190px;
+  font-size:13px
+ }
+
+ .doctor-line{
+  border-top:1px solid #111;
+  margin-bottom:6px
+ }
+
+ .doctor-name{
+  font-weight:bold;
+  font-size:15px
+ }
+
+ .clinic{margin-top:2px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<div class="no-print">
+<h1>PRESCRIPTION</h1>
+</div>
+
+<div class="header-space">
+LETTERHEAD SPACE — 2 INCHES
+</div>
+
+<div class="date" id="date"></div>
+
+<div class="grid no-print">
+<div class="field">
+<label>PATIENT ID</label>
+<input id="patientId">
+</div>
+
+<div class="field">
+<label>PATIENT NAME</label>
+<input id="patientName">
+</div>
+</div>
+
+
+<!-- PRINT VERSION -->
+
+<div class="print-only">
+
+<div class="print-patient" id="printPatient"></div>
+
+<div class="print-meds" id="printMeds"></div>
+
+<div class="print-advice" id="printAdvice"></div>
+
+<div class="print-footer">
+
+<div class="print-follow" id="printFollow"></div>
+
+<div class="print-doctor">
+<div class="doctor-line"></div>
+<div class="doctor-name">Dr. Yatharth Dorle</div>
+<div class="clinic">Paras Clinic, Hupari</div>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- SCREEN MEDICINES -->
+
+<div class="section no-print">
+
+<div class="section-title">MEDICINES</div>
+
+<div class="actions">
+<button onclick="addMedicineRow()">+ ADD MEDICINE</button>
+<button class="secondary" onclick="openMedicineLibrary()">MEDICINE LIBRARY</button>
+</div>
+
+<table id="medTable">
+
+<thead>
+<tr>
+<th style="width:15%">CODE</th>
+<th>NAME / FORM</th>
+<th style="width:16%">DOSE</th>
+<th style="width:12%">QTY</th>
+<th style="width:25%">INSTRUCTIONS</th>
+<th style="width:35px"></th>
+</tr>
+</thead>
+
+<tbody></tbody>
+
+</table>
+
+</div>
+
+
+<!-- ADVICE -->
+
+<div class="section no-print">
+
+<div class="section-title">ADVICE</div>
+
+<div class="actions">
+<button class="secondary" onclick="openAdviceLibrary()">ADVICE LIBRARY</button>
+</div>
+
+<div class="field">
+<label>ADVICE CODE</label>
+<input id="adviceCode"
+placeholder="Example: 1,2,5"
+oninput="fillAdvice()">
+</div>
+
+<div class="field" style="margin-top:6px">
+<label>ADVICE TEXT</label>
+<textarea id="adviceText"
+placeholder="TYPE ADVICE IN MARATHI OR ENGLISH"></textarea>
+</div>
+
+</div>
+
+
+<!-- FOLLOW UP -->
+
+<div class="section no-print">
+
+<div class="grid">
+
+<div class="field">
+<label>FOLLOW-UP DATE (AUTO)</label>
+<input id="followup" type="date">
+</div>
+
+<div class="field">
+<label>NOTES</label>
+<input id="notes">
+</div>
+
+</div>
+
+<div style="font-size:11px;color:#64748b">
+FOLLOW-UP = DAY AFTER THE LONGEST MEDICINE COURSE.
+IF SUNDAY → MONDAY.
+</div>
+
+</div>
+
+
+<div class="actions no-print">
+
+<button onclick="savePrescription()">SAVE PRESCRIPTION</button>
+
+<button onclick="printPrescription()">PRINT / SAVE PDF</button>
+
+<button class="light" onclick="clearPrescription()">CLEAR</button>
+
+</div>
+
+<div id="status" class="status no-print"></div>
+
+</div>
+
+
+<!-- MEDICINE LIBRARY -->
+
+<div class="modal" id="medModal">
+
+<div class="modal-box">
+
+<h2>MEDICINE LIBRARY</h2>
+
+<p style="font-size:12px">
+Initially empty. Add your own medicines and codes.
+</p>
+
+<div class="grid">
+
+<div class="field">
+<label>CODE</label>
+<input id="mCode">
+</div>
+
+<div class="field">
+<label>MEDICINE NAME</label>
+<input id="mName">
+</div>
+
+<div class="field">
+<label>FORM</label>
+<select id="mForm">
+<option>TABLET</option>
+<option>CAPSULE</option>
+<option>SYRUP</option>
+<option>CREAM</option>
+<option>OTHER</option>
+</select>
+</div>
+
+<div class="field">
+<label>DOSE</label>
+<input id="mDose">
+</div>
+
+<div class="field">
+<label>QUANTITY</label>
+<input id="mQty">
+</div>
+
+<div class="field">
+<label>DURATION (DAYS)</label>
+<input id="mDuration" type="number" min="1">
+</div>
+
+<div class="field">
+<label>INSTRUCTIONS</label>
+<input id="mInstr">
+</div>
+
+</div>
+
+<div class="actions">
+<button onclick="saveMedicine()">ADD / UPDATE</button>
+<button class="light" onclick="closeModal('medModal')">CLOSE</button>
+</div>
+
+<div id="medList"></div>
+
+</div>
+</div>
+
+
+<!-- ADVICE LIBRARY -->
+
+<div class="modal" id="advModal">
+
+<div class="modal-box">
+
+<h2>ADVICE LIBRARY</h2>
+
+<p style="font-size:12px">
+Initially empty. Add your own advice and codes.
+</p>
+
+<div class="grid">
+
+<div class="field">
+<label>CODE</label>
+<input id="aCode">
+</div>
+
+<div class="field">
+<label>ADVICE</label>
+<textarea id="aText"></textarea>
+</div>
+
+</div>
+
+<div class="actions">
+<button onclick="saveAdvice()">ADD / UPDATE</button>
+<button class="light" onclick="closeModal('advModal')">CLOSE</button>
+</div>
+
+<div id="advList"></div>
+
+</div>
+</div>
+
+
+<script>
+
+const $=id=>document.getElementById(id);
+
+const get=(key,def=[]) =>
+ JSON.parse(localStorage.getItem(key)||JSON.stringify(def));
+
+const set=(key,value)=>
+ localStorage.setItem(key,JSON.stringify(value));
+
+let medicines=get("medicineLibrary");
+let advices=get("adviceLibrary");
+
+
+/* DATE */
+
+function today(){
+
+ let d=new Date();
+
+ $("date").textContent=
+ "DATE: "+
+ String(d.getDate()).padStart(2,"0")+":"+
+ String(d.getMonth()+1).padStart(2,"0")+":"+
+ d.getFullYear();
+
+}
+
+today();
+
+
+/* STATUS */
+
+function showStatus(text){
+
+ $("status").textContent=text;
+
+ clearTimeout(window.statusTimer);
+
+ window.statusTimer=setTimeout(()=>{
+  $("status").textContent="";
+ },1800);
+
+}
+
+
+/* MEDICINE ROW */
+
+function addMedicineRow(data={}){
+
+ let tr=document.createElement("tr");
+
+ tr.dataset.duration=data.duration||"";
+
+ tr.innerHTML=`
+
+ <td>
+ <input class="mcode"
+ placeholder="CODE"
+ value="${data.code||""}">
+ </td>
+
+ <td>
+ <input class="mname"
+ value="${data.name||""}">
+
+ <select class="mform">
+
+ <option ${data.form==="TABLET"?"selected":""}>TABLET</option>
+ <option ${data.form==="CAPSULE"?"selected":""}>CAPSULE</option>
+ <option ${data.form==="SYRUP"?"selected":""}>SYRUP</option>
+ <option ${data.form==="CREAM"?"selected":""}>CREAM</option>
+ <option ${data.form==="OTHER"?"selected":""}>OTHER</option>
+
+ </select>
+ </td>
+
+ <td>
+ <input class="mdose" value="${data.dose||""}">
+ </td>
+
+ <td>
+ <input class="mqty" value="${data.qty||""}">
+ </td>
+
+ <td>
+ <input class="minstr" value="${data.instr||""}">
+ </td>
+
+ <td>
+ <button class="danger"
+ onclick="removeMedicineRow(this)">×</button>
+ </td>
+ `;
+
+ $("medTable").querySelector("tbody").appendChild(tr);
+
+ let codeInput=tr.querySelector(".mcode");
+
+ codeInput.addEventListener("input",()=>{
+
+   handleMedicineCodes(tr);
+
+ });
+
+ tr.querySelector(".mform").addEventListener("change",()=>{
+   updateFollowup();
+ });
+
+ tr.querySelectorAll("input").forEach(el=>{
+   el.addEventListener("input",updateFollowup);
+ });
+
+ if(data.code) fillSingleMedicine(tr,data.code);
+
+ return tr;
+}
+
+
+/* MULTIPLE MEDICINE CODES */
+
+function handleMedicineCodes(tr){
+
+ let raw=tr.querySelector(".mcode").value
+ .trim()
+ .toUpperCase();
+
+ if(!raw)return;
+
+ let codes=raw
+ .split(/[,;]+/)
+ .map(x=>x.trim())
+ .filter(Boolean);
+
+ if(codes.length<=1){
+
+   fillSingleMedicine(tr,codes[0]);
+
+   updateFollowup();
+
+   return;
+ }
+
+ /* FIRST CODE STAYS IN CURRENT ROW */
+
+ tr.querySelector(".mcode").value=codes[0];
+
+ fillSingleMedicine(tr,codes[0]);
+
+ /* OTHER CODES BECOME NEW ROWS */
+
+ codes.slice(1).forEach(code=>{
+
+   let newRow=addMedicineRow({code:code});
+
+   fillSingleMedicine(newRow,code);
+
+ });
+
+ updateFollowup();
+
+}
+
+
+/* FILL MEDICINE */
+
+function fillSingleMedicine(tr,code){
+
+ let medicine=medicines.find(
+   x=>String(x.code).toUpperCase()===
+   String(code).toUpperCase()
+ );
+
+ if(!medicine)return;
+
+ tr.querySelector(".mname").value=medicine.name||"";
+
+ tr.querySelector(".mform").value=
+ medicine.form||"TABLET";
+
+ tr.querySelector(".mdose").value=
+ medicine.dose||"";
+
+ tr.querySelector(".mqty").value=
+ medicine.form==="CREAM"
+ ? "1"
+ : medicine.qty||"";
+
+ tr.querySelector(".minstr").value=
+ medicine.instr||"";
+
+ tr.dataset.duration=
+ medicine.duration||"";
+
+}
+
+
+/* REMOVE */
+
+function removeMedicineRow(btn){
+
+ btn.closest("tr").remove();
+
+ updateFollowup();
+
+}
+
+
+/* MEDICINE LIBRARY */
+
+function openMedicineLibrary(){
+
+ renderMedList();
+
+ $("medModal").style.display="flex";
+
+}
+
+
+function renderMedList(){
+
+ $("medList").innerHTML=
+
+ medicines.length
+
+ ? medicines.map((m,i)=>`
+
+ <div class="librow">
+
+ <b>${m.code}</b>
+
+ <span>${m.name}</span>
+
+ <span>
+ ${m.form}
+ ${m.duration?` — ${m.duration} DAYS`:""}
+ </span>
+
+ <button class="danger"
+ onclick="deleteMedicine(${i})">
+ DELETE
+ </button>
+
+ </div>
+
+ `).join("")
+
+ : "<p>No medicines saved yet.</p>";
+
+}
+
+
+function saveMedicine(){
+
+ let medicine={
+
+ code:$("mCode").value.trim(),
+
+ name:$("mName").value.trim(),
+
+ form:$("mForm").value,
+
+ dose:$("mDose").value.trim(),
+
+ qty:$("mQty").value.trim(),
+
+ duration:$("mDuration").value.trim(),
+
+ instr:$("mInstr").value.trim()
+
+ };
+
+ if(!medicine.code||!medicine.name){
+
+   alert("ENTER CODE AND MEDICINE NAME");
+
+   return;
+ }
+
+ let index=medicines.findIndex(
+   x=>String(x.code)===String(medicine.code)
+ );
+
+ if(index>=0)
+   medicines[index]=medicine;
+ else
+   medicines.push(medicine);
+
+ set("medicineLibrary",medicines);
+
+ renderMedList();
+
+ showStatus("Changes saved");
+
+ ["mCode","mName","mDose","mQty","mDuration","mInstr"]
+ .forEach(id=>$(id).value="");
+
+}
+
+
+function deleteMedicine(index){
+
+ if(confirm("DELETE THIS MEDICINE?")){
+
+   medicines.splice(index,1);
+
+   set("medicineLibrary",medicines);
+
+   renderMedList();
+
+   showStatus("Changes saved");
+
+ }
+
+}
+
+
+/* ADVICE */
+
+function openAdviceLibrary(){
+
+ renderAdviceList();
+
+ $("advModal").style.display="flex";
+
+}
+
+
+function fillAdvice(){
+
+ let raw=$("adviceCode").value
+ .trim()
+ .toUpperCase();
+
+ if(!raw){
+
+   $("adviceText").value="";
+
+   return;
+ }
+
+ let codes=raw
+ .split(/[,;]+/)
+ .map(x=>x.trim())
+ .filter(Boolean);
+
+ let texts=[];
+
+ codes.forEach(code=>{
+
+   let advice=advices.find(
+     x=>String(x.code).toUpperCase()===code
+   );
+
+   if(advice)texts.push(advice.text);
+
+ });
+
+ $("adviceText").value=texts.join("\n");
+
+}
+
+
+function renderAdviceList(){
+
+ $("advList").innerHTML=
+
+ advices.length
+
+ ? advices.map((a,i)=>`
+
+ <div class="librow"
+ style="grid-template-columns:70px 1fr 70px">
+
+ <b>${a.code}</b>
+
+ <span>${a.text}</span>
+
+ <button class="danger"
+ onclick="deleteAdvice(${i})">
+ DELETE
+ </button>
+
+ </div>
+
+ `).join("")
+
+ : "<p>No advice saved yet.</p>";
+
+}
+
+
+function saveAdvice(){
+
+ let advice={
+
+ code:$("aCode").value.trim(),
+
+ text:$("aText").value.trim()
+
+ };
+
+ if(!advice.code||!advice.text){
+
+   alert("ENTER CODE AND ADVICE");
+
+   return;
+ }
+
+ let index=advices.findIndex(
+   x=>String(x.code)===String(advice.code)
+ );
+
+ if(index>=0)
+   advices[index]=advice;
+ else
+   advices.push(advice);
+
+ set("adviceLibrary",advices);
+
+ renderAdviceList();
+
+ showStatus("Changes saved");
+
+ $("aCode").value="";
+ $("aText").value="";
+
+}
+
+
+function deleteAdvice(index){
+
+ if(confirm("DELETE THIS ADVICE?")){
+
+   advices.splice(index,1);
+
+   set("adviceLibrary",advices);
+
+   renderAdviceList();
+
+   showStatus("Changes saved");
+
+ }
+
+}
+
+
+/* FOLLOW-UP CALCULATION */
+
+function getDuration(tr){
+
+ let code=tr.querySelector(".mcode").value.trim();
+
+ let medicine=medicines.find(
+   x=>String(x.code).toUpperCase()===code.toUpperCase()
+ );
+
+ if(medicine && Number(medicine.duration)>0)
+   return Number(medicine.duration);
+
+ let instruction=tr.querySelector(".minstr").value;
+
+ let match=instruction.match(
+   /(?:FOR\s*)?(\d+)\s*(?:DAY|DAYS)\b/i
+ );
+
+ if(match)return Number(match[1]);
+
+ return Number(tr.dataset.duration)||0;
+
+}
+
+
+function updateFollowup(){
+
+ let rows=[
+   ...document.querySelectorAll("#medTable tbody tr")
+ ];
+
+ let longest=0;
+
+ rows.forEach(row=>{
+   longest=Math.max(longest,getDuration(row));
+ });
+
+ if(!longest){
+
+   $("followup").value="";
+
+   return;
+ }
+
+ let date=new Date();
+
+ date.setHours(12,0,0,0);
+
+ /* FOLLOW UP = DAY AFTER MEDICINE COURSE */
+
+ date.setDate(
+   date.getDate()+longest+1
+ );
+
+ /* SUNDAY → MONDAY */
+
+ if(date.getDay()===0)
+   date.setDate(date.getDate()+1);
+
+ $("followup").value=
+ date.toISOString().slice(0,10);
+
+}
+
+
+/* PRINT */
+
+function escapeHTML(value){
+
+ return String(value||"")
+ .replace(/&/g,"&amp;")
+ .replace(/</g,"&lt;")
+ .replace(/>/g,"&gt;")
+ .replace(/"/g,"&quot;");
+
+}
+
+
+function updatePrintView(){
+
+ let pid=$("patientId").value.trim();
+
+ let name=$("patientName").value.trim();
+
+ $("printPatient").innerHTML=
+
+ (pid||name)
+
+ ? `
+ ${pid?`<div><b>PATIENT ID:</b> ${escapeHTML(pid)}</div>`:""}
+ ${name?`<div><b>NAME:</b> ${escapeHTML(name)}</div>`:""}
+ `
+
+ : "";
+
+
+ let rows=[
+   ...document.querySelectorAll("#medTable tbody tr")
+ ];
+
+ $("printMeds").innerHTML=
+
+ rows.map((row,index)=>{
+
+   let name=row.querySelector(".mname").value.trim();
+
+   let form=row.querySelector(".mform").value.trim();
+
+   let dose=row.querySelector(".mdose").value.trim();
+
+   let qty=row.querySelector(".mqty").value.trim();
+
+   let instruction=row.querySelector(".minstr").value.trim();
+
+   if(!name&&!dose&&!qty&&!instruction)
+     return "";
+
+   let medicineName=
+     [form,name].filter(Boolean).join(" ");
+
+   let instructionText=
+     [dose,instruction]
+     .filter(Boolean)
+     .join(" ");
+
+   return `
+
+   <div class="print-med">
+
+    <div class="print-main">
+
+     <span class="print-no">
+     ${index+1}.
+     </span>
+
+     <span class="print-name">
+     ${escapeHTML(medicineName)}
+     </span>
+
+     <span class="print-qty">
+     ${escapeHTML(qty)}
+     </span>
+
+    </div>
+
+    ${
+      instructionText
+      ?
+      `<div class="print-instr">
+      ${escapeHTML(instructionText)}
+      </div>`
+      :
+      ""
+    }
+
+   </div>
+
+   `;
+
+ }).join("");
+
+
+ let advice=$("adviceText").value.trim();
+
+ $("printAdvice").innerHTML=
+
+ advice
+
+ ? `
+ <div class="print-advice-title">
+ Advice :
+ </div>
+
+ ${advice.split(/\n+/)
+   .filter(Boolean)
+   .map((text,index)=>
+    `<div class="print-advice-line">
+    ${index+1}. ${escapeHTML(text)}
+    </div>`
+   ).join("")
+ }
+ `
+
+ : "";
+
+
+ let follow=$("followup").value;
+
+ if(follow){
+
+   let d=new Date(follow+"T12:00:00");
+
+   $("printFollow").textContent=
+   "FOLLOW UP ON : "+
+   String(d.getDate()).padStart(2,"0")+":"+
+   String(d.getMonth()+1).padStart(2,"0")+":"+
+   d.getFullYear();
+
+ }else{
+
+   $("printFollow").textContent="";
+
+ }
+
+}
+
+
+function printPrescription(){
+
+ updateFollowup();
+
+ updatePrintView();
+
+ window.print();
+
+}
+
+
+/* SAVE */
+
+function savePrescription(){
+
+ let rows=[
+   ...document.querySelectorAll("#medTable tbody tr")
+ ].map(row=>({
+
+   code:row.querySelector(".mcode").value,
+
+   name:row.querySelector(".mname").value,
+
+   form:row.querySelector(".mform").value,
+
+   dose:row.querySelector(".mdose").value,
+
+   qty:row.querySelector(".mqty").value,
+
+   instr:row.querySelector(".minstr").value
+
+ }));
+
+ set("currentPrescription",{
+
+   patientId:$("patientId").value,
+
+   patientName:$("patientName").value,
+
+   rows:rows,
+
+   adviceCode:$("adviceCode").value,
+
+   adviceText:$("adviceText").value,
+
+   followup:$("followup").value,
+
+   notes:$("notes").value
+
+ });
+
+ showStatus("Changes saved");
+
+}
+
+
+/* CLEAR */
+
+function clearPrescription(){
+
+ if(!confirm("CLEAR CURRENT PRESCRIPTION?"))
+   return;
+
+ $("patientId").value="";
+ $("patientName").value="";
+ $("adviceCode").value="";
+ $("adviceText").value="";
+ $("followup").value="";
+ $("notes").value="";
+
+ $("medTable").querySelector("tbody").innerHTML="";
+
+ addMedicineRow();
+
+ showStatus("Cleared");
+
+}
+
+
+function closeModal(id){
+
+ $(id).style.display="none";
+
+}
+
+
+/* START */
+
+addMedicineRow();
+
+</script>
+
+</body>
+</html>
