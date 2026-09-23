@@ -4,1228 +4,311 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>PRESCRIPTION</title>
-
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#f3f4f6;color:#111827;font-family:Arial,sans-serif}
-.app{max-width:900px;margin:auto;background:#fff;min-height:100vh;padding:14px}
-
-h1{text-align:center;font-size:22px;margin:4px 0 12px;letter-spacing:1px}
-
-.header-space{
- height:2in;
- border:1px dashed #cbd5e1;
- margin-bottom:8px;
- display:flex;
- align-items:flex-end;
- justify-content:flex-end;
- padding:6px;
- color:#94a3b8;
- font-size:11px
-}
-
-.date{text-align:right;font-size:12px;margin-bottom:12px}
-
-.grid{
- display:grid;
- grid-template-columns:1fr 2fr;
- gap:8px;
- margin-bottom:14px
-}
-
+body{font-family:Arial,sans-serif;margin:0;background:#f4f6f8;color:#111}
+.app{max-width:900px;margin:auto;padding:12px}
+h1{font-size:22px;margin:4px 0 12px}
+.card{background:#fff;border:1px solid #ddd;border-radius:10px;padding:12px;margin-bottom:12px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+label{font-size:12px;font-weight:700}
+input,select,textarea,button{font:inherit}
+input,select,textarea{border:1px solid #aaa;border-radius:6px;padding:8px;background:#fff}
+button{border:0;border-radius:6px;padding:9px 12px;background:#333;color:#fff}
+button.secondary{background:#666}
+button.danger{background:#9b2226}
+button.small{padding:6px 8px;font-size:12px}
 .field{display:flex;flex-direction:column;gap:4px}
-label{font-size:12px;font-weight:bold}
-
-input,textarea,select,button{font:inherit}
-input,textarea,select{
- border:1px solid #cbd5e1;
- border-radius:7px;
- padding:9px;
- background:#fff
+.patient-grid{display:grid;grid-template-columns:1fr 2fr;gap:8px}
+.codebar{display:flex;gap:8px;align-items:end;flex-wrap:wrap}
+.codebar .field{flex:1;min-width:220px}
+.section-title{font-weight:700;margin-bottom:8px}
+.med-row{border:1px solid #ccc;border-radius:8px;padding:8px;margin-bottom:8px}
+.med-grid{display:grid;grid-template-columns:90px 1fr 110px 80px 90px;gap:7px}
+.med-grid .wide{grid-column:span 2}
+.meds-head{display:grid;grid-template-columns:40px 1fr 90px;gap:8px;font-size:12px;font-weight:700;margin-bottom:5px}
+.advice-line{display:flex;gap:8px;align-items:center;margin:4px 0}
+.advice-line input{flex:1}
+.library-list{max-height:260px;overflow:auto}
+.lib-item{display:grid;grid-template-columns:55px 1fr auto;gap:6px;align-items:center;border-bottom:1px solid #eee;padding:6px 0}
+.muted{font-size:12px;color:#666}
+.hidden{display:none!important}
+#printArea{display:none}
+@media(max-width:650px){
+ .patient-grid{grid-template-columns:1fr}
+ .med-grid{grid-template-columns:80px 1fr 75px}
+ .med-grid .wide{grid-column:1/-1}
 }
-
-textarea{min-height:70px;resize:vertical}
-
-.section{
- border-top:2px solid #0f766e;
- margin-top:14px;
- padding-top:8px
-}
-
-.section-title{font-weight:bold;font-size:14px;margin-bottom:8px}
-
-.actions{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0}
-
-button{
- border:0;
- border-radius:7px;
- padding:9px 12px;
- background:#0f766e;
- color:#fff;
- font-weight:bold
-}
-
-button.secondary{background:#475569}
-button.danger{background:#b91c1c}
-button.light{background:#e2e8f0;color:#111827}
-
-table{width:100%;border-collapse:collapse;font-size:12px}
-th,td{
- border:1px solid #cbd5e1;
- padding:5px;
- vertical-align:top
-}
-th{background:#f1f5f9}
-table input,table select{width:100%;padding:6px;border:0}
-
-.status{
- text-align:center;
- font-size:12px;
- color:#15803d;
- min-height:18px;
- margin:6px
-}
-
-.modal{
- position:fixed;
- inset:0;
- background:#0008;
- display:none;
- align-items:center;
- justify-content:center;
- padding:15px
-}
-
-.modal-box{
- background:#fff;
- border-radius:12px;
- width:min(700px,100%);
- max-height:90vh;
- overflow:auto;
- padding:15px
-}
-
-.librow{
- display:grid;
- grid-template-columns:70px 1fr 100px 70px;
- gap:5px;
- margin-bottom:5px;
- align-items:center
-}
-
-.print-only{display:none}
-
-@media(max-width:600px){
- .grid{grid-template-columns:1fr}
- .librow{grid-template-columns:60px 1fr 75px 55px}
-}
-
 @media print{
-
+ @page{size:A5 portrait;margin:9mm}
  body{background:#fff}
- .app{padding:0;max-width:none}
- .no-print{display:none!important}
-
- .header-space{
-  height:2in;
-  border:0
- }
-
- .print-only{display:block!important}
-
- .print-patient{
-  font-size:14px;
-  margin-bottom:18px
- }
-
- .print-patient div{margin:3px 0}
-
- .print-meds{font-size:13px}
-
- .print-med{
-  padding:9px 0;
-  border-bottom:1px solid #9ca3af;
-  page-break-inside:avoid
- }
-
- .print-main{
-  display:flex;
-  align-items:baseline;
-  gap:7px;
-  font-weight:bold
- }
-
- .print-no{
-  width:25px;
-  flex:0 0 25px
- }
-
- .print-name{
-  flex:1;
-  text-transform:uppercase
- }
-
- .print-qty{
-  min-width:55px;
-  text-align:right
- }
-
- .print-instr{
-  padding:5px 55px 0 32px;
-  line-height:1.4
- }
-
- .print-advice{
-  margin-top:15px;
-  font-size:13px
- }
-
- .print-advice-title{
-  font-weight:bold;
-  font-size:15px;
-  margin-bottom:6px
- }
-
- .print-advice-line{
-  margin:4px 0 4px 28px;
-  white-space:pre-wrap
- }
-
- .print-footer{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-end;
-  margin-top:35px;
-  page-break-inside:avoid
- }
-
- .print-follow{
-  font-weight:bold;
-  font-size:13px
- }
-
- .print-doctor{
-  text-align:right;
-  min-width:190px;
-  font-size:13px
- }
-
- .doctor-line{
-  border-top:1px solid #111;
-  margin-bottom:6px
- }
-
- .doctor-name{
-  font-weight:bold;
-  font-size:15px
- }
-
- .clinic{margin-top:2px}
+ .app{display:none!important}
+ #printArea{display:block!important;font-family:Arial,sans-serif;color:#111}
+ .print-page{min-height:190mm;position:relative;padding-top:10mm}
+ .print-patient{font-size:15px;font-weight:700;margin-bottom:8mm}
+ .print-med{font-size:15px;margin-bottom:5mm}
+ .print-main{display:grid;grid-template-columns:1fr 45mm;gap:4mm;align-items:baseline;font-weight:700}
+ .print-qty{text-align:left}
+ .print-inst{font-size:14px;margin-top:2mm;line-height:1.35}
+ .print-rule{border-top:1px solid #777;margin-top:4mm}
+ .print-advice{font-size:14px;line-height:1.35;margin-top:5mm}
+ .print-advice-item{margin:1mm 0}
+ .print-footer{position:absolute;left:0;right:0;bottom:2mm;display:flex;justify-content:space-between;align-items:end;font-size:13px}
+ .follow{font-weight:700}
+ .doctor{text-align:right;font-weight:700}
+ .clinic{font-weight:400;margin-top:1mm}
 }
 </style>
 </head>
-
 <body>
-
 <div class="app">
-
-<div class="no-print">
 <h1>PRESCRIPTION</h1>
-</div>
 
-<div class="header-space">
-LETTERHEAD SPACE — 2 INCHES
-</div>
-
-<div class="date" id="date"></div>
-
-<div class="grid no-print">
-<div class="field">
-<label>PATIENT ID</label>
-<input id="patientId">
-</div>
-
-<div class="field">
-<label>PATIENT NAME</label>
-<input id="patientName">
+<div class="card">
+<div class="section-title">PATIENT</div>
+<div class="patient-grid">
+<div class="field"><label>PATIENT ID</label><input id="patientId" autocomplete="off"></div>
+<div class="field"><label>PATIENT NAME</label><input id="patientName" autocomplete="off"></div>
 </div>
 </div>
 
-
-<!-- PRINT VERSION -->
-
-<div class="print-only">
-
-<div class="print-patient" id="printPatient"></div>
-
-<div class="print-meds" id="printMeds"></div>
-
-<div class="print-advice" id="printAdvice"></div>
-
-<div class="print-footer">
-
-<div class="print-follow" id="printFollow"></div>
-
-<div class="print-doctor">
-<div class="doctor-line"></div>
-<div class="doctor-name">Dr. Yatharth Dorle</div>
-<div class="clinic">Paras Clinic, Hupari</div>
-</div>
-
-</div>
-
-</div>
-
-
-<!-- SCREEN MEDICINES -->
-
-<div class="section no-print">
-
+<div class="card">
 <div class="section-title">MEDICINES</div>
-
-<div class="actions">
-<button onclick="addMedicineRow()">+ ADD MEDICINE</button>
-<button class="secondary" onclick="openMedicineLibrary()">MEDICINE LIBRARY</button>
+<div class="codebar">
+<div class="field">
+<label>MEDICINE CODES (e.g. 1,33,81)</label>
+<input id="medicineCodes" placeholder="1,33,81" autocomplete="off">
+</div>
+<button id="fillMedicineCodes">FILL MEDICINES</button>
+<button class="secondary" id="medicineLibraryBtn">MEDICINE LIBRARY</button>
+</div>
+<div class="muted" style="margin-top:5px">Enter saved codes separated by commas. They will be added in exactly that sequence.</div>
+<div id="medicineRows" style="margin-top:10px"></div>
+<button class="secondary" id="addMedicine">+ ADD MEDICINE</button>
 </div>
 
-<table id="medTable">
-
-<thead>
-<tr>
-<th style="width:15%">CODE</th>
-<th>NAME / FORM</th>
-<th style="width:16%">DOSE</th>
-<th style="width:12%">QTY</th>
-<th style="width:25%">INSTRUCTIONS</th>
-<th style="width:35px"></th>
-</tr>
-</thead>
-
-<tbody></tbody>
-
-</table>
-
-</div>
-
-
-<!-- ADVICE -->
-
-<div class="section no-print">
-
+<div class="card">
 <div class="section-title">ADVICE</div>
-
-<div class="actions">
-<button class="secondary" onclick="openAdviceLibrary()">ADVICE LIBRARY</button>
-</div>
-
+<div class="codebar">
 <div class="field">
-<label>ADVICE CODE</label>
-<input id="adviceCode"
-placeholder="Example: 1,2,5"
-oninput="fillAdvice()">
+<label>ADVICE CODES (e.g. 1,3)</label>
+<input id="adviceCodes" placeholder="1,3" autocomplete="off">
+</div>
+<button id="fillAdviceCodes">FILL ADVICE</button>
+<button class="secondary" id="adviceLibraryBtn">ADVICE LIBRARY</button>
+</div>
+<div id="adviceRows" style="margin-top:8px"></div>
 </div>
 
-<div class="field" style="margin-top:6px">
-<label>ADVICE TEXT</label>
-<textarea id="adviceText"
-placeholder="TYPE ADVICE IN MARATHI OR ENGLISH"></textarea>
+<div class="card">
+<div class="row">
+<button id="printBtn">PRINT / SAVE PDF</button>
+<button class="secondary" id="saveBtn">SAVE</button>
+<button class="danger" id="clearBtn">CLEAR</button>
+</div>
+<div class="muted" id="status" style="margin-top:7px"></div>
 </div>
 
+<div class="card hidden" id="medicineLibCard">
+<div class="section-title">MEDICINE LIBRARY</div>
+<div class="row">
+<input id="mCode" placeholder="Code" style="width:75px">
+<input id="mName" placeholder="Medicine name" style="flex:1">
+<select id="mForm"><option>TABLET</option><option>CAPSULE</option><option>SYRUP</option><option>CREAM</option><option>OTHER</option></select>
+<input id="mDose" placeholder="Dose" style="width:90px">
+<input id="mQty" placeholder="Quantity" style="width:85px">
+<input id="mDuration" placeholder="Duration days" style="width:110px">
+</div>
+<textarea id="mInstruction" placeholder="Instructions" rows="2" style="width:100%;margin-top:8px"></textarea>
+<div class="row" style="margin-top:8px">
+<button id="saveMedicine">SAVE MEDICINE</button>
+<button class="secondary" id="closeMedicineLib">CLOSE</button>
+</div>
+<div id="medicineLibraryList" class="library-list" style="margin-top:8px"></div>
 </div>
 
-
-<!-- FOLLOW UP -->
-
-<div class="section no-print">
-
-<div class="grid">
-
-<div class="field">
-<label>FOLLOW-UP DATE (AUTO)</label>
-<input id="followup" type="date">
+<div class="card hidden" id="adviceLibCard">
+<div class="section-title">ADVICE LIBRARY</div>
+<div class="row">
+<input id="aCode" placeholder="Code" style="width:75px">
+<input id="aText" placeholder="Advice text" style="flex:1">
 </div>
-
-<div class="field">
-<label>NOTES</label>
-<input id="notes">
+<div class="row" style="margin-top:8px">
+<button id="saveAdvice">SAVE ADVICE</button>
+<button class="secondary" id="closeAdviceLib">CLOSE</button>
 </div>
-
-</div>
-
-<div style="font-size:11px;color:#64748b">
-FOLLOW-UP = DAY AFTER THE LONGEST MEDICINE COURSE.
-IF SUNDAY → MONDAY.
-</div>
-
-</div>
-
-
-<div class="actions no-print">
-
-<button onclick="savePrescription()">SAVE PRESCRIPTION</button>
-
-<button onclick="printPrescription()">PRINT / SAVE PDF</button>
-
-<button class="light" onclick="clearPrescription()">CLEAR</button>
-
-</div>
-
-<div id="status" class="status no-print"></div>
-
-</div>
-
-
-<!-- MEDICINE LIBRARY -->
-
-<div class="modal" id="medModal">
-
-<div class="modal-box">
-
-<h2>MEDICINE LIBRARY</h2>
-
-<p style="font-size:12px">
-Initially empty. Add your own medicines and codes.
-</p>
-
-<div class="grid">
-
-<div class="field">
-<label>CODE</label>
-<input id="mCode">
-</div>
-
-<div class="field">
-<label>MEDICINE NAME</label>
-<input id="mName">
-</div>
-
-<div class="field">
-<label>FORM</label>
-<select id="mForm">
-<option>TABLET</option>
-<option>CAPSULE</option>
-<option>SYRUP</option>
-<option>CREAM</option>
-<option>OTHER</option>
-</select>
-</div>
-
-<div class="field">
-<label>DOSE</label>
-<input id="mDose">
-</div>
-
-<div class="field">
-<label>QUANTITY</label>
-<input id="mQty">
-</div>
-
-<div class="field">
-<label>DURATION (DAYS)</label>
-<input id="mDuration" type="number" min="1">
-</div>
-
-<div class="field">
-<label>INSTRUCTIONS</label>
-<input id="mInstr">
-</div>
-
-</div>
-
-<div class="actions">
-<button onclick="saveMedicine()">ADD / UPDATE</button>
-<button class="light" onclick="closeModal('medModal')">CLOSE</button>
-</div>
-
-<div id="medList"></div>
-
+<div id="adviceLibraryList" class="library-list" style="margin-top:8px"></div>
 </div>
 </div>
 
-
-<!-- ADVICE LIBRARY -->
-
-<div class="modal" id="advModal">
-
-<div class="modal-box">
-
-<h2>ADVICE LIBRARY</h2>
-
-<p style="font-size:12px">
-Initially empty. Add your own advice and codes.
-</p>
-
-<div class="grid">
-
-<div class="field">
-<label>CODE</label>
-<input id="aCode">
-</div>
-
-<div class="field">
-<label>ADVICE</label>
-<textarea id="aText"></textarea>
-</div>
-
-</div>
-
-<div class="actions">
-<button onclick="saveAdvice()">ADD / UPDATE</button>
-<button class="light" onclick="closeModal('advModal')">CLOSE</button>
-</div>
-
-<div id="advList"></div>
-
-</div>
-</div>
-
+<div id="printArea"></div>
 
 <script>
-
 const $=id=>document.getElementById(id);
+let medicines=JSON.parse(localStorage.getItem('paras_medicines')||'[]');
+let advices=JSON.parse(localStorage.getItem('paras_advices')||'[]');
+let medCounter=0;
 
-const get=(key,def=[]) =>
- JSON.parse(localStorage.getItem(key)||JSON.stringify(def));
-
-const set=(key,value)=>
- localStorage.setItem(key,JSON.stringify(value));
-
-let medicines=get("medicineLibrary");
-let advices=get("adviceLibrary");
-
-
-/* DATE */
-
-function today(){
-
- let d=new Date();
-
- $("date").textContent=
- "DATE: "+
- String(d.getDate()).padStart(2,"0")+":"+
- String(d.getMonth()+1).padStart(2,"0")+":"+
- d.getFullYear();
-
+function saveLibraries(){
+ localStorage.setItem('paras_medicines',JSON.stringify(medicines));
+ localStorage.setItem('paras_advices',JSON.stringify(advices));
 }
-
-today();
-
-
-/* STATUS */
-
-function showStatus(text){
-
- $("status").textContent=text;
-
- clearTimeout(window.statusTimer);
-
- window.statusTimer=setTimeout(()=>{
-  $("status").textContent="";
- },1800);
-
+function esc(v){
+ return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
-
-
-/* MEDICINE ROW */
-
-function addMedicineRow(data={}){
-
- let tr=document.createElement("tr");
-
- tr.dataset.duration=data.duration||"";
-
- tr.innerHTML=`
-
- <td>
- <input class="mcode"
- placeholder="CODE"
- value="${data.code||""}">
- </td>
-
- <td>
- <input class="mname"
- value="${data.name||""}">
-
- <select class="mform">
-
- <option ${data.form==="TABLET"?"selected":""}>TABLET</option>
- <option ${data.form==="CAPSULE"?"selected":""}>CAPSULE</option>
- <option ${data.form==="SYRUP"?"selected":""}>SYRUP</option>
- <option ${data.form==="CREAM"?"selected":""}>CREAM</option>
- <option ${data.form==="OTHER"?"selected":""}>OTHER</option>
-
- </select>
- </td>
-
- <td>
- <input class="mdose" value="${data.dose||""}">
- </td>
-
- <td>
- <input class="mqty" value="${data.qty||""}">
- </td>
-
- <td>
- <input class="minstr" value="${data.instr||""}">
- </td>
-
- <td>
- <button class="danger"
- onclick="removeMedicineRow(this)">×</button>
- </td>
- `;
-
- $("medTable").querySelector("tbody").appendChild(tr);
-
- let codeInput=tr.querySelector(".mcode");
-
- codeInput.addEventListener("input",()=>{
-
-   handleMedicineCodes(tr);
-
- });
-
- tr.querySelector(".mform").addEventListener("change",()=>{
-   updateFollowup();
- });
-
- tr.querySelectorAll("input").forEach(el=>{
-   el.addEventListener("input",updateFollowup);
- });
-
- if(data.code) fillSingleMedicine(tr,data.code);
-
- return tr;
+function makeMedRow(data={}){
+ medCounter++;
+ const d=document.createElement('div');
+ d.className='med-row';
+ d.dataset.row=medCounter;
+ d.innerHTML=`
+ <div class="med-grid">
+   <div class="field"><label>CODE</label><input class="med-code" value="${esc(data.code||'')}" autocomplete="off"></div>
+   <div class="field"><label>MEDICINE</label><input class="med-name" value="${esc(data.name||'')}"></div>
+   <div class="field"><label>FORM</label><select class="med-form">
+    ${['TABLET','CAPSULE','SYRUP','CREAM','OTHER'].map(x=>`<option ${x===(data.form||'TABLET')?'selected':''}>${x}</option>`).join('')}
+   </select></div>
+   <div class="field"><label>DOSE</label><input class="med-dose" value="${esc(data.dose||'')}"></div>
+   <div class="field"><label>QTY</label><input class="med-qty" value="${esc(data.qty||'')}"></div>
+   <div class="field wide"><label>INSTRUCTIONS</label><input class="med-inst" value="${esc(data.instruction||'')}"></div>
+   <div class="field"><label>DURATION</label><input class="med-duration" value="${esc(data.duration||'')}"></div>
+   <div><button class="danger small remove-med">REMOVE</button></div>
+ </div>`;
+ $('medicineRows').appendChild(d);
+ d.querySelector('.med-code').addEventListener('change',()=>fillSingleMedicine(d));
+ d.querySelector('.remove-med').onclick=()=>{d.remove();updateFollowup();};
+ return d;
 }
-
-
-/* MULTIPLE MEDICINE CODES */
-
-function handleMedicineCodes(tr){
-
- let raw=tr.querySelector(".mcode").value
- .trim()
- .toUpperCase();
-
- if(!raw)return;
-
- let codes=raw
- .split(/[,;]+/)
- .map(x=>x.trim())
- .filter(Boolean);
-
- if(codes.length<=1){
-
-   fillSingleMedicine(tr,codes[0]);
-
-   updateFollowup();
-
-   return;
- }
-
- /* FIRST CODE STAYS IN CURRENT ROW */
-
- tr.querySelector(".mcode").value=codes[0];
-
- fillSingleMedicine(tr,codes[0]);
-
- /* OTHER CODES BECOME NEW ROWS */
-
- codes.slice(1).forEach(code=>{
-
-   let newRow=addMedicineRow({code:code});
-
-   fillSingleMedicine(newRow,code);
-
- });
-
+function findMed(code){return medicines.find(x=>String(x.code).toUpperCase()===String(code).trim().toUpperCase())}
+function fillSingleMedicine(row){
+ const m=findMed(row.querySelector('.med-code').value);
+ if(!m)return;
+ row.querySelector('.med-name').value=m.name||'';
+ row.querySelector('.med-form').value=m.form||'TABLET';
+ row.querySelector('.med-dose').value=m.dose||'';
+ row.querySelector('.med-qty').value=m.qty||'';
+ row.querySelector('.med-inst').value=m.instruction||'';
+ row.querySelector('.med-duration').value=m.duration||'';
  updateFollowup();
-
 }
-
-
-/* FILL MEDICINE */
-
-function fillSingleMedicine(tr,code){
-
- let medicine=medicines.find(
-   x=>String(x.code).toUpperCase()===
-   String(code).toUpperCase()
- );
-
- if(!medicine)return;
-
- tr.querySelector(".mname").value=medicine.name||"";
-
- tr.querySelector(".mform").value=
- medicine.form||"TABLET";
-
- tr.querySelector(".mdose").value=
- medicine.dose||"";
-
- tr.querySelector(".mqty").value=
- medicine.form==="CREAM"
- ? "1"
- : medicine.qty||"";
-
- tr.querySelector(".minstr").value=
- medicine.instr||"";
-
- tr.dataset.duration=
- medicine.duration||"";
-
-}
-
-
-/* REMOVE */
-
-function removeMedicineRow(btn){
-
- btn.closest("tr").remove();
-
+function fillMedicineCodes(){
+ const codes=$('medicineCodes').value.split(/[,;]+/).map(x=>x.trim()).filter(Boolean);
+ if(!codes.length)return;
+ $('medicineRows').innerHTML='';
+ codes.forEach(code=>fillSingleMedicine(makeMedRow({code})));
  updateFollowup();
-
 }
-
-
-/* MEDICINE LIBRARY */
-
-function openMedicineLibrary(){
-
- renderMedList();
-
- $("medModal").style.display="flex";
-
+function addAdviceRow(text=''){
+ const d=document.createElement('div'); d.className='advice-line';
+ d.innerHTML=`<input class="advice-text" value="${esc(text)}"><button class="danger small">X</button>`;
+ d.querySelector('button').onclick=()=>d.remove();
+ $('adviceRows').appendChild(d);
+ return d;
 }
-
-
-function renderMedList(){
-
- $("medList").innerHTML=
-
- medicines.length
-
- ? medicines.map((m,i)=>`
-
- <div class="librow">
-
- <b>${m.code}</b>
-
- <span>${m.name}</span>
-
- <span>
- ${m.form}
- ${m.duration?` — ${m.duration} DAYS`:""}
- </span>
-
- <button class="danger"
- onclick="deleteMedicine(${i})">
- DELETE
- </button>
-
- </div>
-
- `).join("")
-
- : "<p>No medicines saved yet.</p>";
-
-}
-
-
-function saveMedicine(){
-
- let medicine={
-
- code:$("mCode").value.trim(),
-
- name:$("mName").value.trim(),
-
- form:$("mForm").value,
-
- dose:$("mDose").value.trim(),
-
- qty:$("mQty").value.trim(),
-
- duration:$("mDuration").value.trim(),
-
- instr:$("mInstr").value.trim()
-
- };
-
- if(!medicine.code||!medicine.name){
-
-   alert("ENTER CODE AND MEDICINE NAME");
-
-   return;
- }
-
- let index=medicines.findIndex(
-   x=>String(x.code)===String(medicine.code)
- );
-
- if(index>=0)
-   medicines[index]=medicine;
- else
-   medicines.push(medicine);
-
- set("medicineLibrary",medicines);
-
- renderMedList();
-
- showStatus("Changes saved");
-
- ["mCode","mName","mDose","mQty","mDuration","mInstr"]
- .forEach(id=>$(id).value="");
-
-}
-
-
-function deleteMedicine(index){
-
- if(confirm("DELETE THIS MEDICINE?")){
-
-   medicines.splice(index,1);
-
-   set("medicineLibrary",medicines);
-
-   renderMedList();
-
-   showStatus("Changes saved");
-
- }
-
-}
-
-
-/* ADVICE */
-
-function openAdviceLibrary(){
-
- renderAdviceList();
-
- $("advModal").style.display="flex";
-
-}
-
-
-function fillAdvice(){
-
- let raw=$("adviceCode").value
- .trim()
- .toUpperCase();
-
- if(!raw){
-
-   $("adviceText").value="";
-
-   return;
- }
-
- let codes=raw
- .split(/[,;]+/)
- .map(x=>x.trim())
- .filter(Boolean);
-
- let texts=[];
-
- codes.forEach(code=>{
-
-   let advice=advices.find(
-     x=>String(x.code).toUpperCase()===code
-   );
-
-   if(advice)texts.push(advice.text);
-
+function fillAdviceCodes(){
+ const codes=$('adviceCodes').value.split(/[,;]+/).map(x=>x.trim()).filter(Boolean);
+ if(!codes.length)return;
+ $('adviceRows').innerHTML='';
+ codes.forEach(c=>{
+   const a=advices.find(x=>String(x.code).toUpperCase()===c.toUpperCase());
+   if(a)addAdviceRow(a.text);
  });
-
- $("adviceText").value=texts.join("\n");
-
 }
-
-
-function renderAdviceList(){
-
- $("advList").innerHTML=
-
- advices.length
-
- ? advices.map((a,i)=>`
-
- <div class="librow"
- style="grid-template-columns:70px 1fr 70px">
-
- <b>${a.code}</b>
-
- <span>${a.text}</span>
-
- <button class="danger"
- onclick="deleteAdvice(${i})">
- DELETE
- </button>
-
- </div>
-
- `).join("")
-
- : "<p>No advice saved yet.</p>";
-
+function getDuration(row){
+ const n=parseInt(row.querySelector('.med-duration').value,10);
+ if(Number.isFinite(n))return n;
+ const s=row.querySelector('.med-inst').value||'';
+ const m=s.match(/(?:FOR|X)\\s+(\\d+)\\s*DAYS?/i);
+ return m?parseInt(m[1],10):0;
 }
-
-
-function saveAdvice(){
-
- let advice={
-
- code:$("aCode").value.trim(),
-
- text:$("aText").value.trim()
-
- };
-
- if(!advice.code||!advice.text){
-
-   alert("ENTER CODE AND ADVICE");
-
-   return;
- }
-
- let index=advices.findIndex(
-   x=>String(x.code)===String(advice.code)
- );
-
- if(index>=0)
-   advices[index]=advice;
- else
-   advices.push(advice);
-
- set("adviceLibrary",advices);
-
- renderAdviceList();
-
- showStatus("Changes saved");
-
- $("aCode").value="";
- $("aText").value="";
-
-}
-
-
-function deleteAdvice(index){
-
- if(confirm("DELETE THIS ADVICE?")){
-
-   advices.splice(index,1);
-
-   set("adviceLibrary",advices);
-
-   renderAdviceList();
-
-   showStatus("Changes saved");
-
- }
-
-}
-
-
-/* FOLLOW-UP CALCULATION */
-
-function getDuration(tr){
-
- let code=tr.querySelector(".mcode").value.trim();
-
- let medicine=medicines.find(
-   x=>String(x.code).toUpperCase()===code.toUpperCase()
- );
-
- if(medicine && Number(medicine.duration)>0)
-   return Number(medicine.duration);
-
- let instruction=tr.querySelector(".minstr").value;
-
- let match=instruction.match(
-   /(?:FOR\s*)?(\d+)\s*(?:DAY|DAYS)\b/i
- );
-
- if(match)return Number(match[1]);
-
- return Number(tr.dataset.duration)||0;
-
-}
-
-
-function updateFollowup(){
-
- let rows=[
-   ...document.querySelectorAll("#medTable tbody tr")
- ];
-
- let longest=0;
-
- rows.forEach(row=>{
-   longest=Math.max(longest,getDuration(row));
- });
-
- if(!longest){
-
-   $("followup").value="";
-
-   return;
- }
-
- let date=new Date();
-
- date.setHours(12,0,0,0);
-
- /* FOLLOW UP = DAY AFTER MEDICINE COURSE */
-
- date.setDate(
-   date.getDate()+longest+1
- );
-
- /* SUNDAY → MONDAY */
-
- if(date.getDay()===0)
-   date.setDate(date.getDate()+1);
-
- $("followup").value=
- date.toISOString().slice(0,10);
-
-}
-
-
-/* PRINT */
-
-function escapeHTML(value){
-
- return String(value||"")
- .replace(/&/g,"&amp;")
- .replace(/</g,"&lt;")
- .replace(/>/g,"&gt;")
- .replace(/"/g,"&quot;");
-
-}
-
-
-function updatePrintView(){
-
- let pid=$("patientId").value.trim();
-
- let name=$("patientName").value.trim();
-
- $("printPatient").innerHTML=
-
- (pid||name)
-
- ? `
- ${pid?`<div><b>PATIENT ID:</b> ${escapeHTML(pid)}</div>`:""}
- ${name?`<div><b>NAME:</b> ${escapeHTML(name)}</div>`:""}
- `
-
- : "";
-
-
- let rows=[
-   ...document.querySelectorAll("#medTable tbody tr")
- ];
-
- $("printMeds").innerHTML=
-
- rows.map((row,index)=>{
-
-   let name=row.querySelector(".mname").value.trim();
-
-   let form=row.querySelector(".mform").value.trim();
-
-   let dose=row.querySelector(".mdose").value.trim();
-
-   let qty=row.querySelector(".mqty").value.trim();
-
-   let instruction=row.querySelector(".minstr").value.trim();
-
-   if(!name&&!dose&&!qty&&!instruction)
-     return "";
-
-   let medicineName=
-     [form,name].filter(Boolean).join(" ");
-
-   let instructionText=
-     [dose,instruction]
-     .filter(Boolean)
-     .join(" ");
-
-   return `
-
-   <div class="print-med">
-
-    <div class="print-main">
-
-     <span class="print-no">
-     ${index+1}.
-     </span>
-
-     <span class="print-name">
-     ${escapeHTML(medicineName)}
-     </span>
-
-     <span class="print-qty">
-     ${escapeHTML(qty)}
-     </span>
-
-    </div>
-
-    ${
-      instructionText
-      ?
-      `<div class="print-instr">
-      ${escapeHTML(instructionText)}
-      </div>`
-      :
-      ""
-    }
-
-   </div>
-
-   `;
-
- }).join("");
-
-
- let advice=$("adviceText").value.trim();
-
- $("printAdvice").innerHTML=
-
- advice
-
- ? `
- <div class="print-advice-title">
- Advice :
- </div>
-
- ${advice.split(/\n+/)
-   .filter(Boolean)
-   .map((text,index)=>
-    `<div class="print-advice-line">
-    ${index+1}. ${escapeHTML(text)}
-    </div>`
-   ).join("")
- }
- `
-
- : "";
-
-
- let follow=$("followup").value;
-
- if(follow){
-
-   let d=new Date(follow+"T12:00:00");
-
-   $("printFollow").textContent=
-   "FOLLOW UP ON : "+
-   String(d.getDate()).padStart(2,"0")+":"+
-   String(d.getMonth()+1).padStart(2,"0")+":"+
-   d.getFullYear();
-
- }else{
-
-   $("printFollow").textContent="";
-
- }
-
-}
-
-
-function printPrescription(){
-
- updateFollowup();
-
- updatePrintView();
-
- window.print();
-
-}
-
-
-/* SAVE */
-
+function updateFollowup(){}
 function savePrescription(){
-
- let rows=[
-   ...document.querySelectorAll("#medTable tbody tr")
- ].map(row=>({
-
-   code:row.querySelector(".mcode").value,
-
-   name:row.querySelector(".mname").value,
-
-   form:row.querySelector(".mform").value,
-
-   dose:row.querySelector(".mdose").value,
-
-   qty:row.querySelector(".mqty").value,
-
-   instr:row.querySelector(".minstr").value
-
+ localStorage.setItem('paras_current_prescription',JSON.stringify({
+   patientId:$('patientId').value,patientName:$('patientName').value,
+   medicineCodes:$('medicineCodes').value,
+   medicines:[...document.querySelectorAll('.med-row')].map(r=>({
+    code:r.querySelector('.med-code').value,name:r.querySelector('.med-name').value,
+    form:r.querySelector('.med-form').value,dose:r.querySelector('.med-dose').value,
+    qty:r.querySelector('.med-qty').value,instruction:r.querySelector('.med-inst').value,
+    duration:r.querySelector('.med-duration').value
+   })),
+   advice:[...document.querySelectorAll('.advice-text')].map(x=>x.value)
  }));
-
- set("currentPrescription",{
-
-   patientId:$("patientId").value,
-
-   patientName:$("patientName").value,
-
-   rows:rows,
-
-   adviceCode:$("adviceCode").value,
-
-   adviceText:$("adviceText").value,
-
-   followup:$("followup").value,
-
-   notes:$("notes").value
-
- });
-
- showStatus("Changes saved");
-
+ $('status').textContent='Changes saved';
+ setTimeout(()=>{$('status').textContent=''},1800);
 }
-
-
-/* CLEAR */
-
-function clearPrescription(){
-
- if(!confirm("CLEAR CURRENT PRESCRIPTION?"))
-   return;
-
- $("patientId").value="";
- $("patientName").value="";
- $("adviceCode").value="";
- $("adviceText").value="";
- $("followup").value="";
- $("notes").value="";
-
- $("medTable").querySelector("tbody").innerHTML="";
-
- addMedicineRow();
-
- showStatus("Cleared");
-
+function loadPrescription(){
+ const x=JSON.parse(localStorage.getItem('paras_current_prescription')||'null');
+ if(!x)return;
+ $('patientId').value=x.patientId||'';$('patientName').value=x.patientName||'';
+ $('medicineCodes').value=x.medicineCodes||'';
+ $('medicineRows').innerHTML='';
+ (x.medicines||[]).forEach(m=>makeMedRow(m));
+ $('adviceRows').innerHTML='';(x.advice||[]).forEach(a=>addAdviceRow(a));
 }
-
-
-function closeModal(id){
-
- $(id).style.display="none";
-
+function renderMedLibrary(){
+ $('medicineLibraryList').innerHTML=medicines.length?medicines.slice().sort((a,b)=>String(a.name).localeCompare(String(b.name))).map((m,i)=>`
+ <div class="lib-item"><b>${esc(m.code)}</b><span>${esc(m.name)} ${esc(m.dose||'')} <small>${esc(m.duration||'')}d</small></span>
+ <span><button class="small secondary" onclick="editMed(${i})">EDIT</button> <button class="small danger" onclick="delMed(${i})">REMOVE</button></span></div>`).join(''):'<div class="muted">No medicines saved yet.</div>';
 }
-
-
-/* START */
-
-addMedicineRow();
-
+window.editMed=i=>{
+ const m=medicines[i];$('mCode').value=m.code||'';$('mName').value=m.name||'';$('mForm').value=m.form||'TABLET';$('mDose').value=m.dose||'';$('mQty').value=m.qty||'';$('mDuration').value=m.duration||'';$('mInstruction').value=m.instruction||'';
+ $('mCode').dataset.edit=i;
+};
+window.delMed=i=>{if(confirm('Remove this medicine?')){medicines.splice(i,1);saveLibraries();renderMedLibrary();}};
+function renderAdviceLibrary(){
+ $('adviceLibraryList').innerHTML=advices.length?advices.slice().sort((a,b)=>String(a.code).localeCompare(String(b.code),undefined,{numeric:true})).map((a,i)=>`
+ <div class="lib-item"><b>${esc(a.code)}</b><span>${esc(a.text)}</span>
+ <span><button class="small secondary" onclick="editAdv(${i})">EDIT</button> <button class="small danger" onclick="delAdv(${i})">REMOVE</button></span></div>`).join(''):'<div class="muted">No advice saved yet.</div>';
+}
+window.editAdv=i=>{$('aCode').value=advices[i].code;$('aText').value=advices[i].text;$('aCode').dataset.edit=i};
+window.delAdv=i=>{if(confirm('Remove this advice?')){advices.splice(i,1);saveLibraries();renderAdviceLibrary();}};
+$('fillMedicineCodes').onclick=fillMedicineCodes;
+$('medicineCodes').addEventListener('change',fillMedicineCodes);
+$('addMedicine').onclick=()=>makeMedRow();
+$('fillAdviceCodes').onclick=fillAdviceCodes;
+$('adviceCodes').addEventListener('change',fillAdviceCodes);
+$('medicineLibraryBtn').onclick=()=>{$('medicineLibCard').classList.remove('hidden');renderMedLibrary()};
+$('closeMedicineLib').onclick=()=>$('medicineLibCard').classList.add('hidden');
+$('adviceLibraryBtn').onclick=()=>{$('adviceLibCard').classList.remove('hidden');renderAdviceLibrary()};
+$('closeAdviceLib').onclick=()=>$('adviceLibCard').classList.add('hidden');
+$('saveMedicine').onclick=()=>{
+ const obj={code:$('mCode').value.trim(),name:$('mName').value.trim(),form:$('mForm').value,dose:$('mDose').value.trim(),qty:$('mQty').value.trim(),duration:$('mDuration').value.trim(),instruction:$('mInstruction').value.trim()};
+ if(!obj.code||!obj.name){alert('Enter at least Code and Medicine name');return}
+ const i=$('mCode').dataset.edit;
+ if(i!==undefined&&i!==''){medicines[Number(i)]=obj;delete $('mCode').dataset.edit}else medicines.push(obj);
+ saveLibraries();['mCode','mName','mDose','mQty','mDuration','mInstruction'].forEach(id=>$(id).value='');renderMedLibrary();
+};
+$('saveAdvice').onclick=()=>{
+ const obj={code:$('aCode').value.trim(),text:$('aText').value.trim()};
+ if(!obj.code||!obj.text){alert('Enter Code and Advice');return}
+ const i=$('aCode').dataset.edit;
+ if(i!==undefined&&i!==''){advices[Number(i)]=obj;delete $('aCode').dataset.edit}else advices.push(obj);
+ saveLibraries();$('aCode').value='';$('aText').value='';renderAdviceLibrary();
+};
+$('saveBtn').onclick=savePrescription;
+$('clearBtn').onclick=()=>{if(confirm('Clear current prescription?')){localStorage.removeItem('paras_current_prescription');location.reload()}};
+function updatePrintView(){
+ const meds=[...document.querySelectorAll('.med-row')];
+ const advice=[...document.querySelectorAll('.advice-text')].map(x=>x.value.trim()).filter(Boolean);
+ let follow='';
+ const ds=meds.map(getDuration).filter(x=>x>0);
+ if(ds.length){
+  const max=Math.max(...ds);
+  const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+max+1);
+  if(d.getDay()===0)d.setDate(d.getDate()+1);
+  follow=`FOLLOW UP: ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+ }
+ $('printArea').innerHTML=`<div class="print-page">
+ <div class="print-patient">${esc($('patientId').value)}${$('patientId').value&&$('patientName').value?' — ':''}${esc($('patientName').value)}</div>
+ ${meds.map((r,i)=>`<div class="print-med"><div class="print-main"><div>${i+1}. ${esc(r.querySelector('.med-form').value)} ${esc(r.querySelector('.med-name').value)} ${esc(r.querySelector('.med-dose').value)}</div><div class="print-qty">${esc(r.querySelector('.med-qty').value)}</div></div><div class="print-inst">${esc(r.querySelector('.med-inst').value)}</div><div class="print-rule"></div></div>`).join('')}
+ ${advice.length?`<div class="print-advice"><b>ADVICE</b>${advice.map((a,i)=>`<div class="print-advice-item">${i+1}. ${esc(a)}</div>`).join('')}</div>`:''}
+ <div class="print-footer"><div class="follow">${follow}</div><div class="doctor">Dr. Yatharth Dorle<div class="clinic">Paras Clinic, Hupari</div></div></div>
+ </div>`;
+}
+$('printBtn').onclick=()=>{updatePrintView();setTimeout(()=>window.print(),50)};
+loadPrescription();
+if(!document.querySelector('.med-row'))makeMedRow();
 </script>
-
 </body>
 </html>
