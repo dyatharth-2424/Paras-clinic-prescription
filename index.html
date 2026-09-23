@@ -3,152 +3,188 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0f766e">
-<link rel="manifest" href="manifest.json">
 <title>PRESCRIPTION</title>
+
 <style>
-*{box-sizing:border-box} body{margin:0;background:#f3f4f6;color:#111827;font-family:Arial,sans-serif}
-.app{max-width:900px;margin:auto;background:white;min-height:100vh;padding:14px}
-h1{font-size:22px;margin:4px 0 12px;text-align:center;letter-spacing:1px}
-.header-space{height:2in;border:1px dashed #cbd5e1;margin-bottom:8px;display:flex;align-items:flex-end;justify-content:flex-end;padding:6px;color:#94a3b8;font-size:11px}
+*{box-sizing:border-box}
+body{margin:0;background:#f3f4f6;color:#111827;font-family:Arial,sans-serif}
+.app{max-width:900px;margin:auto;background:#fff;min-height:100vh;padding:14px}
+
+h1{text-align:center;font-size:22px;margin:4px 0 12px;letter-spacing:1px}
+
+.header-space{
+ height:2in;
+ border:1px dashed #cbd5e1;
+ margin-bottom:8px;
+ display:flex;
+ align-items:flex-end;
+ justify-content:flex-end;
+ padding:6px;
+ color:#94a3b8;
+ font-size:11px
+}
+
 .date{text-align:right;font-size:12px;margin-bottom:12px}
-.grid{display:grid;grid-template-columns:1fr 2fr;gap:8px;margin-bottom:14px}
-label{font-size:12px;font-weight:bold}.field{display:flex;flex-direction:column;gap:4px}
-input,textarea,select,button{font:inherit} input,textarea,select{border:1px solid #cbd5e1;border-radius:7px;padding:9px;background:white}
+
+.grid{
+ display:grid;
+ grid-template-columns:1fr 2fr;
+ gap:8px;
+ margin-bottom:14px
+}
+
+.field{display:flex;flex-direction:column;gap:4px}
+label{font-size:12px;font-weight:bold}
+
+input,textarea,select,button{font:inherit}
+input,textarea,select{
+ border:1px solid #cbd5e1;
+ border-radius:7px;
+ padding:9px;
+ background:#fff
+}
+
 textarea{min-height:70px;resize:vertical}
-.section{border-top:2px solid #0f766e;margin-top:14px;padding-top:8px}
+
+.section{
+ border-top:2px solid #0f766e;
+ margin-top:14px;
+ padding-top:8px
+}
+
 .section-title{font-weight:bold;font-size:14px;margin-bottom:8px}
+
 .actions{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0}
-button{border:0;border-radius:7px;padding:9px 12px;background:#0f766e;color:#fff;font-weight:bold}
-button.secondary{background:#475569}button.danger{background:#b91c1c}button.light{background:#e2e8f0;color:#111827}
-table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #cbd5e1;padding:5px;vertical-align:top}th{background:#f1f5f9}
+
+button{
+ border:0;
+ border-radius:7px;
+ padding:9px 12px;
+ background:#0f766e;
+ color:#fff;
+ font-weight:bold
+}
+
+button.secondary{background:#475569}
+button.danger{background:#b91c1c}
+button.light{background:#e2e8f0;color:#111827}
+
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{
+ border:1px solid #cbd5e1;
+ padding:5px;
+ vertical-align:top
+}
+th{background:#f1f5f9}
 table input,table select{width:100%;padding:6px;border:0}
-.status{text-align:center;font-size:12px;color:#15803d;min-height:18px;margin:6px}
-.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;padding:15px}
-.modal-box{background:white;border-radius:12px;width:min(700px,100%);max-height:90vh;overflow:auto;padding:15px}
-.modal h2{margin-top:0}.librow{display:grid;grid-template-columns:70px 1fr 90px 70px;gap:5px;margin-bottom:5px;align-items:center}
-@media(max-width:600px){.grid{grid-template-columns:1fr}.librow{grid-template-columns:60px 1fr 75px 55px}th:nth-child(2),td:nth-child(2){width:34%}}
+
+.status{
+ text-align:center;
+ font-size:12px;
+ color:#15803d;
+ min-height:18px;
+ margin:6px
+}
+
+.modal{
+ position:fixed;
+ inset:0;
+ background:#0008;
+ display:none;
+ align-items:center;
+ justify-content:center;
+ padding:15px
+}
+
+.modal-box{
+ background:#fff;
+ border-radius:12px;
+ width:min(700px,100%);
+ max-height:90vh;
+ overflow:auto;
+ padding:15px
+}
+
+.librow{
+ display:grid;
+ grid-template-columns:70px 1fr 100px 70px;
+ gap:5px;
+ margin-bottom:5px;
+ align-items:center
+}
+
+.print-only{display:none}
+
+@media(max-width:600px){
+ .grid{grid-template-columns:1fr}
+ .librow{grid-template-columns:60px 1fr 75px 55px}
+}
+
 @media print{
- body{background:white}.app{padding:0;max-width:none}.no-print{display:none!important}
- .header-space{height:2in;border:0}.section{border-top:1px solid #000}
- input,textarea,select{border:0;padding:2px;background:transparent}
-}
-</style>
-</head>
-<body>
-<div class="app">
-<div class="no-print"><h1>PRESCRIPTION</h1></div>
-<div class="header-space"><span>LETTERHEAD SPACE — 2 INCHES</span></div>
-<div class="date" id="date"></div>
 
-<div class="grid">
-  <div class="field"><label>PATIENT ID (OPTIONAL)</label><input id="patientId"></div>
-  <div class="field"><label>PATIENT NAME (OPTIONAL)</label><input id="patientName"></div>
-</div>
+ body{background:#fff}
+ .app{padding:0;max-width:none}
+ .no-print{display:none!important}
 
-<div class="section">
-<div class="section-title">MEDICINES</div>
-<div class="actions no-print">
-<button onclick="addMedicineRow()">+ ADD MEDICINE</button>
-<button class="secondary" onclick="openMedicineLibrary()">MEDICINE LIBRARY</button>
-</div>
-<table id="medTable">
-<thead><tr><th style="width:13%">CODE</th><th>NAME / FORM</th><th style="width:18%">DOSE</th><th style="width:12%">QTY</th><th style="width:25%">INSTRUCTIONS</th><th class="no-print" style="width:34px"></th></tr></thead>
-<tbody></tbody>
-</table>
-</div>
+ .header-space{
+  height:2in;
+  border:0
+ }
 
-<div class="section">
-<div class="section-title">ADVICE</div>
-<div class="actions no-print"><button class="secondary" onclick="openAdviceLibrary()">ADVICE LIBRARY</button></div>
-<div class="field"><label>ADVICE CODE (optional)</label><input id="adviceCode" placeholder="e.g. 1, 3, 5, 112" oninput="fillAdvice()"></div>
-<div class="field" style="margin-top:6px"><label>ADVICE TEXT</label><textarea id="adviceText" placeholder="TYPE ADVICE (MARATHI OR ENGLISH)"></textarea></div>
-</div>
+ .print-only{display:block!important}
 
-<div class="section no-print">
-<div class="grid">
- <div class="field"><label>FOLLOW-UP DATE (OPTIONAL)</label><input id="followup" type="date"></div>
- <div class="field"><label>NOTES (OPTIONAL)</label><input id="notes"></div>
-</div>
-</div>
+ .print-patient{
+  font-size:14px;
+  margin-bottom:18px
+ }
 
-<div class="actions no-print">
-<button onclick="savePrescription()">SAVE PRESCRIPTION</button>
-<button onclick="window.print()">PRINT / SAVE PDF</button>
-<button class="light" onclick="clearPrescription()">CLEAR</button>
-</div>
-<div id="status" class="status no-print"></div>
-</div>
+ .print-patient div{margin:3px 0}
 
-<div class="modal" id="medModal"><div class="modal-box">
-<h2>MEDICINE LIBRARY</h2>
-<p style="font-size:12px">Initially empty. Add your own medicines and codes. No drug list is preloaded.</p>
-<div class="grid">
-<div class="field"><label>CODE</label><input id="mCode"></div>
-<div class="field"><label>MEDICINE NAME</label><input id="mName"></div>
-<div class="field"><label>FORM</label><select id="mForm"><option>TABLET</option><option>CAPSULE</option><option>SYRUP</option><option>CREAM</option><option>OTHER</option></select></div>
-<div class="field"><label>DOSE</label><input id="mDose" placeholder="e.g. 1-0-1"></div>
-<div class="field"><label>QUANTITY</label><input id="mQty"></div>
-<div class="field"><label>INSTRUCTIONS</label><input id="mInstr"></div>
-</div>
-<div class="actions"><button onclick="saveMedicine()">ADD / UPDATE</button><button class="light" onclick="closeModal('medModal')">CLOSE</button></div>
-<div id="medList"></div>
-</div></div>
+ .print-meds{font-size:13px}
 
-<div class="modal" id="advModal"><div class="modal-box">
-<h2>ADVICE LIBRARY</h2>
-<p style="font-size:12px">Initially empty. Add your own advice and codes.</p>
-<div class="grid"><div class="field"><label>CODE</label><input id="aCode"></div><div class="field"><label>ADVICE</label><textarea id="aText"></textarea></div></div>
-<div class="actions"><button onclick="saveAdvice()">ADD / UPDATE</button><button class="light" onclick="closeModal('advModal')">CLOSE</button></div>
-<div id="advList"></div>
-</div></div>
+ .print-med{
+  padding:9px 0;
+  border-bottom:1px solid #9ca3af;
+  page-break-inside:avoid
+ }
 
-<script>
-const $=id=>document.getElementById(id);
-const get=(k,d=[])=>JSON.parse(localStorage.getItem(k)||JSON.stringify(d));
-const set=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
-let medicines=get('medicineLibrary'), advices=get('adviceLibrary');
+ .print-main{
+  display:flex;
+  align-items:baseline;
+  gap:7px;
+  font-weight:bold
+ }
 
-function showStatus(t){$('status').textContent=t;clearTimeout(window.st);window.st=setTimeout(()=>{$('status').textContent=''},1800)}
-function today(){let d=new Date();$('date').textContent='DATE: '+String(d.getDate()).padStart(2,'0')+':'+String(d.getMonth()+1).padStart(2,'0')+':'+d.getFullYear()}
-today();
+ .print-no{
+  width:25px;
+  flex:0 0 25px
+ }
 
-function addMedicineRow(data={}){
- let tr=document.createElement('tr');
- tr.innerHTML=`<td><input class="mcode" placeholder="CODE" value="${data.code||''}"></td>
- <td><input class="mname" value="${data.name||''}"><select class="mform"><option ${data.form==='TABLET'?'selected':''}>TABLET</option><option ${data.form==='CAPSULE'?'selected':''}>CAPSULE</option><option ${data.form==='SYRUP'?'selected':''}>SYRUP</option><option ${data.form==='CREAM'?'selected':''}>CREAM</option><option ${data.form==='OTHER'?'selected':''}>OTHER</option></select></td>
- <td><input class="mdose" value="${data.dose||''}"></td><td><input class="mqty" value="${data.qty||''}"></td>
- <td><input class="minstr" value="${data.instr||''}"></td><td class="no-print"><button class="danger" onclick="this.closest('tr').remove()">×</button></td>`;
- $('medTable').querySelector('tbody').appendChild(tr);
- tr.querySelector('.mcode').addEventListener('input',()=>fillMedicine(tr));
-}
-function fillMedicine(tr){
- let code=tr.querySelector('.mcode').value.trim().toUpperCase();
- let m=medicines.find(x=>x.code.toUpperCase()===code); if(!m)return;
- tr.querySelector('.mname').value=m.name;tr.querySelector('.mform').value=m.form;
- tr.querySelector('.mdose').value=m.dose;tr.querySelector('.mqty').value=m.form==='CREAM'?'1':m.qty;
- tr.querySelector('.minstr').value=m.instr;
-}
-function openMedicineLibrary(){renderMedList();$('medModal').style.display='flex'}
-function renderMedList(){$('medList').innerHTML=medicines.length?medicines.map((m,i)=>`<div class="librow"><b>${m.code}</b><span>${m.name}</span><span>${m.form}</span><button class="danger" onclick="delMedicine(${i})">DELETE</button></div>`).join(''):'<p>No medicines saved yet.</p>'}
-function saveMedicine(){
- let m={code:$('mCode').value.trim(),name:$('mName').value.trim(),form:$('mForm').value,dose:$('mDose').value.trim(),qty:$('mQty').value.trim(),instr:$('mInstr').value.trim()};
- if(!m.code||!m.name){alert('Enter CODE and MEDICINE NAME');return}
- let i=medicines.findIndex(x=>x.code===m.code);i>=0?medicines[i]=m:medicines.push(m);set('medicineLibrary',medicines);renderMedList();showStatus('Changes saved');['mCode','mName','mDose','mQty','mInstr'].forEach(x=>$(x).value='');
-}
-function delMedicine(i){if(confirm('Delete this medicine?')){medicines.splice(i,1);set('medicineLibrary',medicines);renderMedList();showStatus('Changes saved')}}
-function openAdviceLibrary(){renderAdvList();$('advModal').style.display='flex'}
-function fillAdvice(){let code=$('adviceCode').value.trim().toUpperCase();let a=advices.find(x=>x.code.toUpperCase()===code);if(a)$('adviceText').value=a.text}
-function renderAdvList(){$('advList').innerHTML=advices.length?advices.map((a,i)=>`<div class="librow" style="grid-template-columns:70px 1fr 70px"><b>${a.code}</b><span>${a.text}</span><button class="danger" onclick="delAdvice(${i})">DELETE</button></div>`).join(''):'<p>No advice saved yet.</p>'}
-function saveAdvice(){let a={code:$('aCode').value.trim(),text:$('aText').value.trim()};if(!a.code||!a.text){alert('Enter CODE and ADVICE');return}let i=advices.findIndex(x=>x.code===a.code);i>=0?advices[i]=a:advices.push(a);set('adviceLibrary',advices);renderAdvList();showStatus('Changes saved');$('aCode').value='';$('aText').value=''}
-function delAdvice(i){if(confirm('Delete this advice?')){advices.splice(i,1);set('adviceLibrary',advices);renderAdvList();showStatus('Changes saved')}}
-function closeModal(id){$(id).style.display='none'}
-function savePrescription(){
- let rows=[...document.querySelectorAll('#medTable tbody tr')].map(tr=>({code:tr.querySelector('.mcode').value,name:tr.querySelector('.mname').value,form:tr.querySelector('.mform').value,dose:tr.querySelector('.mdose').value,qty:tr.querySelector('.mqty').value,instr:tr.querySelector('.minstr').value}));
- set('currentPrescription',{patientId:$('patientId').value,patientName:$('patientName').value,rows,adviceCode:$('adviceCode').value,adviceText:$('adviceText').value,followup:$('followup').value,notes:$('notes').value});showStatus('Changes saved')
-}
-function clearPrescription(){if(!confirm('Clear current prescription?'))return;$('patientId').value='';$('patientName').value='';$('adviceCode').value='';$('adviceText').value='';$('followup').value='';$('notes').value='';$('medTable tbody').innerHTML='';showStatus('Cleared')}
-addMedicineRow();
-if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
-</script>
-</body></html>
+ .print-name{
+  flex:1;
+  text-transform:uppercase
+ }
+
+ .print-qty{
+  min-width:55px;
+  text-align:right
+ }
+
+ .print-instr{
+  padding:5px 55px 0 32px;
+  line-height:1.4
+ }
+
+ .print-advice{
+  margin-top:15px;
+  font-size:13px
+ }
+
+ .print-advice-title{
+  font-weight:bold;
+  font-size:15px;
+  margin-bottom:6px
+ }
+
+ .print-advice-line{
+  margin:4px 0 4px 28
